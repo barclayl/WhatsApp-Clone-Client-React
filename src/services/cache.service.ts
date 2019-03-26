@@ -18,6 +18,7 @@ export const useCacheService = () => {
 };
 
 export const writeMessage = (client: Client, message: MessageFragment) => {
+  type FullChat = { [key: string]: any };
   let fullChat;
 
   const chatId = defaultDataIdFromObject(message);
@@ -26,7 +27,7 @@ export const writeMessage = (client: Client, message: MessageFragment) => {
     return;
   }
   try {
-    fullChat = client.readFragment({
+    fullChat = client.readFragment<FullChat>({
       id: chatId,
       fragment: fragments.fullChat,
       fragmentName: 'FullChat',

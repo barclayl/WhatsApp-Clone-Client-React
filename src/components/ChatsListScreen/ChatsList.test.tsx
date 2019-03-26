@@ -30,6 +30,10 @@ describe('ChatsList', () => {
                   id: 1,
                   content: 'Hello',
                   createdAt: new Date(0),
+                  chat: {
+                    __typename: 'Chat',
+                    id: 1,
+                  },
                 },
               },
             ],
@@ -71,6 +75,10 @@ describe('ChatsList', () => {
                   id: 1,
                   content: 'Hello',
                   createdAt: new Date(0),
+                  chat: {
+                    __typename: 'Chat',
+                    id: 1,
+                  },
                 },
               },
             ],
