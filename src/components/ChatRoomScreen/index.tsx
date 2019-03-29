@@ -59,6 +59,7 @@ const ChatRoomScreen: React.FC<RouteComponentProps<TParams>> = ({ history, match
           __typename: 'Message',
           id: Math.random().toString(36).substr(2, 9),
           createdAt: new Date(),
+          isMine: true,
           chat: {
             __typename: 'Chat',
             id: chatId,
