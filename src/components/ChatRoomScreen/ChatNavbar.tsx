@@ -35,8 +35,8 @@ const Name = styled.div `
 `;
 
 interface ChildComponentProps {
-  history : History,
-  chat: any
+  history: History;
+  chat: any;
 };
 
 const ChatNavbar: React.FC<ChildComponentProps> = ({ chat, history }) => {

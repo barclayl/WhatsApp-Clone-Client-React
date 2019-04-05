@@ -58,7 +58,7 @@ const MessageDate = styled.div `
   font-size: 13px;
 `;
 interface ChildComponentProps {
-  history : History
+  history: History;
 };
 
 const ChatsList: React.FC<ChildComponentProps> = ({ history }) => {

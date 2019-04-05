@@ -14,7 +14,7 @@ interface ChildComponentProps {
 
 const ChatsListScreen: React.FC<ChildComponentProps> = ({ history }) => (
   <Container>
-    <ChatsNavbar />
+    <ChatsNavbar history={history} />
     <ChatsList history={history} />
   </Container>
 );
