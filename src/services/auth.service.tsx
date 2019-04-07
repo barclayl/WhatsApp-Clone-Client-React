@@ -1,7 +1,16 @@
 import React from 'react';
+import { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import client from '../client';
+import { useMeQuery, User } from '../graphql/types';
 import { useCacheService } from './cache.service';
+import gql from 'graphql-tag';
+
+const MyContext = React.createContext<User|null>(null);
+
+export const useMe = () => {
+  return useContext(MyContext);
+};
 
 export const withAuth = <P extends object>(Component: React.ComponentType<P>) => {
   return (props: any) => {
@@ -15,30 +24,50 @@ export const withAuth = <P extends object>(Component: React.ComponentType<P>) =>
       );
     }
 
+    const { data, error, loading } = useMeQuery();
+
     useCacheService();
 
+    if (loading) return null;
+
+    if (data === undefined) return null;
+
+    if (error || !data.me) {
+      signOut();
+
+      return <Redirect to="/sign-in" />;
+    }
+
     return (
-      <Component {...props as P} />
+      <MyContext.Provider value={data.me}>
+        <Component {...props as P} />
+      </MyContext.Provider>
     );
   };
 };
 
-export const signIn = (currentUserId: string) => {
-  document.cookie = `currentUserId=${currentUserId}`;
-
-  // This will become async in the near future
-  return Promise.resolve();
+export const signIn = ({ username, password }: { username: string, password: string}) => {
+  return client.mutate({
+    mutation: gql`
+      mutation signIn($username: String!, $password: String!) {
+        signIn(username: $username, password: $password) {
+          id
+        }
+      }
+    `,
+    variables: {
+      username,
+      password
+    }
+  });
 };
 
 export const signOut = () => {
-  // "expires" represents the lifespan of a cookie. Beyond that date the cookie will
-  // be deleted by the browser. "expires" cannot be viewed from "document.cookie"
-  document.cookie = `currentUserId=;expires=${new Date(0)}`;
+  document.cookie = `authToken=;expires=${new Date(0)}`;
 
-  // Clear cache
   return client.clearStore();
 };
 
 export const isSignedIn = () => {
-  return /currentUserId=.+(;|$)/.test(document.cookie);
+  return /authToken=.+(;|$)/.test(document.cookie);
 };
