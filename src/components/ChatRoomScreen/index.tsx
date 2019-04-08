@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import React from 'react';
 import { useCallback } from 'react';
+import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import ChatNavbar from './ChatNavbar';
@@ -84,6 +85,13 @@ const ChatRoomScreen: React.FC<RouteComponentProps<TParams>> = ({ history, match
 
   if (loadingChat) return null;
   if (chat === null) return null;
+
+  // Chat was probably removed from cache by the subscription handler
+  if (!chat) {
+    return (
+      <Redirect to="/chats" />
+    );
+  }
 
   return (
     <Container>
